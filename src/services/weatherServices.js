@@ -22,3 +22,12 @@ export const getForecast = (lat, lon) =>
       appid: API_KEY,
     },
   });
+
+export const searchCityByName = (cityName) =>
+  axios.get(`${BASE_URL}/weather`, {
+    params: {
+      q: cityName,
+      units: 'metric',
+      appid: API_KEY,
+    },
+  });

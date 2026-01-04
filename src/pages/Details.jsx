@@ -1,66 +1,59 @@
-import './Details.css';
-
-import { useState, useEffect, useMemo } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
+import { useEffect, useMemo, useState } from 'react';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 
 import { fetchWeather } from '../slices/weatherSlice';
-import { CITIES } from '../constants/cities';
+import ForecastCard from '../components/ForecastCard';
 import { getDailyForecast } from '../functions/getDailyForecast';
 import {
-  convertTemperature,
   useTemperatureUnit,
+  convertTemperature,
 } from '../hooks/useTemperature';
 
-import ForecastCard from '../components/ForecastCard';
-
+import './Details.css';
 
 const Details = () => {
-  const { id } = useParams();
+  const { state: city } = useLocation();
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
-  // 🌡 jednostka temperatury z Reduxa (hook użyty RAZ)
-  const unit = useTemperatureUnit();
-
-  // 🏙 miasto na podstawie parametru z URL
-  const city = CITIES.find((c) => c.id === Number(id));
-
-  // 🌤 dane pogodowe z Reduxa
   const { current, forecast, loading, error } = useSelector(
     (state) => state.weather
   );
 
-  const [view, setView] = useState('current'); // 'current' | 'forecast'
+  const unit = useTemperatureUnit();
+  const [view, setView] = useState('current');
 
-  // 📡 pobranie danych pogodowych
   useEffect(() => {
-    if (city) {
+    if (city?.lat && city?.lon) {
       dispatch(fetchWeather(city));
     }
   }, [dispatch, city]);
 
-  // 📅 prognoza 5-dniowa (useMemo)
   const dailyForecast = useMemo(
-    () => (forecast?.length ? getDailyForecast(forecast) : []),
+    () => getDailyForecast(forecast),
     [forecast]
   );
 
-  // 🛡 zabezpieczenia renderu
-  if (!city) return <p>Nie znaleziono miasta</p>;
-  if (loading) return <p>Ładowanie...</p>;
-  if (error) return <p>{error}</p>;
-  if (!current) return null;
+  if (!city) {
+    return <p>Nie znaleziono miasta</p>;
+  }
 
-  // 🌡 bieżąca temperatura
+  if (loading) {
+    return <p>Ładowanie danych pogodowych...</p>;
+  }
+
+  if (!current) {
+    return null;
+  }
+
   const currentTemp = convertTemperature(current.main.temp, unit);
 
   return (
     <div className="details">
-      <button className="back-button" onClick={() => navigate('/')}>
-        ← Wróć do listy
+      <button className="back-button" onClick={() => navigate(-1)}>
+        Powrót
       </button>
-
       <h1>{city.name}</h1>
 
       <div className="view-switcher">
@@ -81,35 +74,31 @@ const Details = () => {
 
       {view === 'current' && (
         <div className="current-weather">
-          <div className="current-main">
-            <img
-              alt="weather icon"
-              src={`https://openweathermap.org/img/wn/${current.weather[0].icon}@2x.png`}
-            />
-            <h2>
-              {currentTemp.toFixed(1)} °{unit}
-            </h2>
-          </div>
+          <img
+            alt="weather"
+            src={`https://openweathermap.org/img/wn/${current.weather[0].icon}@2x.png`}
+          />
+
+          <h2>
+            {currentTemp.toFixed(1)} °{unit}
+          </h2>
 
           <p>{current.weather[0].description}</p>
-          <p>Wiatr: {current.wind?.speed} m/s</p>
+          <p>Wiatr: {current.wind.speed} m/s</p>
           <p>Zachmurzenie: {current.clouds.all}%</p>
         </div>
       )}
 
       {view === 'forecast' && (
-        <>
-          <h3>Prognoza (5 dni)</h3>
-          <div className="forecast-list">
-            {dailyForecast.map((item) => (
-              <ForecastCard
-                key={item.dt}
-                forecast={item}
-                unit={unit}
-              />
-            ))}
-          </div>
-        </>
+        <div className="forecast-list">
+          {dailyForecast.map((item) => (
+            <ForecastCard
+              key={item.dt}
+              forecast={item}
+              unit={unit}
+            />
+          ))}
+        </div>
       )}
     </div>
   );

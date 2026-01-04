@@ -1,54 +1,57 @@
-import { useReducer } from 'react';
+import { useState, useCallback } from 'react';
 import CityCard from '../components/CityCard';
-import Details from './Details';
+import SearchBar from '../components/searchBar';
 import { CITIES } from '../constants/cities';
-
-const initialState = {
-  view: 'LIST',
-  selectedCity: null,
-};
-
-function reducer(state, action) {
-  switch (action.type) {
-    case 'SHOW_DETAILS':
-      return {
-        view: 'DETAILS',
-        selectedCity: action.payload,
-      };
-    case 'BACK_TO_LIST':
-      return initialState;
-    default:
-      return state;
-  }
-}
+import { searchCityByName } from '../services/weatherServices';
+import './Home.css';
 
 const Home = () => {
-  const [state, dispatch] = useReducer(reducer, initialState);
+  const [cities, setCities] = useState(CITIES);
+  const [query, setQuery] = useState('');
+  const [error, setError] = useState(null);
+
+  const handleSearch = useCallback(async () => {
+    if (!query) return;
+
+    try {
+      const response = await searchCityByName(query);
+
+      const newCity = {
+        id: response.data.id,
+        name: response.data.name,
+        lat: response.data.coord.lat,
+        lon: response.data.coord.lon,
+      };
+
+      setCities((prev) => {
+        const exists = prev.some((c) => c.id === newCity.id);
+        return exists ? prev : [...prev, newCity];
+      });
+
+      setError(null);
+      setQuery('');
+    } catch (err) {
+      setError('Nie znaleziono miejscowości');
+    }
+  }, [query]);
 
   return (
-    <div>
+    <div className="home">
       <h1>Lista miejscowości</h1>
 
-      {state.view === 'LIST' && (
-        <div>
-          {CITIES.map((city) => (
-            <CityCard
-              key={city.id}
-              city={city}
-              onClick={() =>
-                dispatch({ type: 'SHOW_DETAILS', payload: city })
-              }
-            />
-          ))}
-        </div>
-      )}
+      <SearchBar
+        value={query}
+        onChange={setQuery}
+        onSubmit={handleSearch}
+      />
 
-      {state.view === 'DETAILS' && state.selectedCity && (
-        <Details
-          city={state.selectedCity}
-          onBack={() => dispatch({ type: 'BACK_TO_LIST' })}
-        />
-      )}
+      {error && <p className="error">{error}</p>}
+
+      <div className="city-list">
+        {cities.map((city) => (
+          <CityCard key={city.id} city={city} />
+        ))}
+      </div>
     </div>
   );
 };
