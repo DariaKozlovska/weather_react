@@ -1,44 +1,34 @@
-import React from 'react';
+import './ForecastCard.css';
 import { getWindDirection } from '../constants/windDirections';
+import { convertTemperature } from '../hooks/useTemperature';
 
-const ForecastCard = ({ forecast }) => {
-  const { dt_txt, main, weather, pop, wind, rain, snow } = forecast;
-
-  let precipitationType = 'Brak';
-  let precipitationAmount = 0;
-
-  if (rain && rain['3h']) {
-    precipitationType = 'Deszcz';
-    precipitationAmount = rain['3h'];
-  } else if (snow && snow['3h']) {
-    precipitationType = 'Śnieg';
-    precipitationAmount = snow['3h'];
-  }
-
-  const windDirection = getWindDirection(wind.deg);
-
+const ForecastCard = ({ forecast, unit }) => {
   return (
-    <div style={{
-      border: '1px solid #ccc', 
-      borderRadius: 8, 
-      padding: 12, 
-      marginBottom: 8,
-      display: 'flex',
-      alignItems: 'center',
-      gap: 12
-    }}>
+    <div className="forecast-card">
+      <p>{forecast.dt_txt.split(' ')[0]}</p>
+
       <img
-        alt="weather"
-        src={`https://openweathermap.org/img/wn/${weather[0].icon}@2x.png`}
-        style={{ width: 50, height: 50 }}
+        alt="icon"
+        src={`https://openweathermap.org/img/wn/${forecast.weather[0].icon}.png`}
       />
-      <div>
-        <p>{new Date(dt_txt).toLocaleDateString()}</p>
-        <p>Temp: {main.temp} °C</p>
-        <p>Opady: {pop * 100}%</p>
-        <p>{precipitationType} ({precipitationAmount} mm)</p>
-        <p>Wiatr: {wind.speed} m/s, {windDirection}</p>
-      </div>
+
+      <p>
+        {convertTemperature(forecast.main.temp, unit).toFixed(1)} °{unit}
+      </p>
+
+      <p>Opady: {Math.round(forecast.pop * 100)}%</p>
+
+      {forecast.rain?.['3h'] && (
+        <p>Deszcz: {forecast.rain['3h']} mm</p>
+      )}
+      {forecast.snow?.['3h'] && (
+        <p>Śnieg: {forecast.snow['3h']} mm</p>
+      )}
+
+      <p>
+        Wiatr: {forecast.wind.speed} m/s (
+        {getWindDirection(forecast.wind.deg)})
+      </p>
     </div>
   );
 };

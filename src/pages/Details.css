@@ -1,3 +1,47 @@
-.header {
-    color: #088F8F;
+.details {
+  background: white;
+  border-radius: 12px;
+  padding: 20px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+}
+
+.back-button {
+  margin-bottom: 10px;
+}
+
+.view-switcher {
+  display: flex;
+  gap: 10px;
+  margin: 16px 0;
+}
+
+.current-weather {
+  text-align: center;
+}
+
+.current-main {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 12px;
+}
+
+.forecast-list {
+  margin-top: 10px;
+}
+
+.view-switcher {
+  display: flex;
+  gap: 10px;
+  margin: 16px 0;
+}
+
+.view-switcher button {
+  background-color: #e3eaf2;
+  color: #333;
+}
+
+.view-switcher button.active {
+  background-color: #1976d2;
+  color: white;
 }

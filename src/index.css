@@ -11,3 +11,27 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
 }
+
+body {
+  font-family: 'Segoe UI', Tahoma, sans-serif;
+  background: #f4f6f8;
+  color: #333;
+}
+
+button {
+  cursor: pointer;
+  border: none;
+  padding: 8px 14px;
+  border-radius: 6px;
+  background-color: #1976d2;
+  color: white;
+  font-size: 14px;
+}
+
+button:hover {
+  background-color: #145ea8;
+}
+
+button.active {
+  background-color: #0d47a1;
+}
