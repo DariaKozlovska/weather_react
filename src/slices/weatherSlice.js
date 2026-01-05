@@ -1,9 +1,9 @@
-import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
-import { getCurrentWeather, getForecast } from '../services/weatherServices';
+import {createSlice, createAsyncThunk} from '@reduxjs/toolkit';
+import {getCurrentWeather, getForecast} from '../services/weatherServices';
 
 export const fetchWeather = createAsyncThunk(
     'weather/fetchWeather',
-    async ({ lat, lon }) => {
+    async ({lat, lon}) => {
         const [current, forecast] = await Promise.all([
             getCurrentWeather(lat, lon),
             getForecast(lat, lon),
@@ -13,7 +13,7 @@ export const fetchWeather = createAsyncThunk(
             current: current.data,
             forecast: forecast.data.list,
         };
-    }
+    },
 );
 
 export const weatherSlice = createSlice({
@@ -25,9 +25,9 @@ export const weatherSlice = createSlice({
         error: null,
     },
     reducers: {},
-    extraReducers: (builder) => {
+    extraReducers: builder => {
         builder
-            .addCase(fetchWeather.pending, (state) => {
+            .addCase(fetchWeather.pending, state => {
                 state.loading = true;
                 state.error = null;
             })
@@ -36,7 +36,7 @@ export const weatherSlice = createSlice({
                 state.current = action.payload.current;
                 state.forecast = action.payload.forecast;
             })
-            .addCase(fetchWeather.rejected, (state) => {
+            .addCase(fetchWeather.rejected, state => {
                 state.loading = false;
                 state.error = 'Błąd pobierania danych pogodowych';
             });
