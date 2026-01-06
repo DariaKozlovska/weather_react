@@ -1,19 +1,19 @@
-import { createSlice } from '@reduxjs/toolkit';
-import { loadFromLocalStorage } from '../utils/localStorage';
+import {createSlice} from '@reduxjs/toolkit';
+import {loadFromLocalStorage} from '../utils/localStorage';
 
 const initialState = {
-  unit: loadFromLocalStorage('unit') || 'C',
+    unit: loadFromLocalStorage('unit') || 'C',
 };
 
 const unitSlice = createSlice({
-  name: 'unit',
-  initialState,
-  reducers: {
-    setUnit(state, action) {
-      state.unit = action.payload;
+    name: 'unit',
+    initialState,
+    reducers: {
+        setUnit(state, action) {
+            state.unit = action.payload;
+        },
     },
-  },
 });
 
-export const { setUnit } = unitSlice.actions;
+export const {setUnit} = unitSlice.actions;
 export default unitSlice.reducer;

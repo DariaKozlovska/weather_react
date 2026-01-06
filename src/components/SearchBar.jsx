@@ -1,15 +1,15 @@
 import PropTypes from 'prop-types';
 
-const SearchBar = ({ value, onChange, onSubmit }) => {
-  const handleSubmit = e => {
-    e.preventDefault();
-    onSubmit();
-  };
+const SearchBar = ({value, onChange, onSubmit}) => {
+    const handleSubmit = e => {
+        e.preventDefault();
+        onSubmit();
+    };
 
-  return (
-    <form
-      onSubmit={handleSubmit}
-      className="
+    return (
+        <form
+            onSubmit={handleSubmit}
+            className="
         relative w-full
         bg-white/80 backdrop-blur-md
         border border-white/20
@@ -18,14 +18,13 @@ const SearchBar = ({ value, onChange, onSubmit }) => {
         focus-within:ring-2 focus-within:ring-blue-400/60
         transition
       "
-    >
-
-      <input
-        type="text"
-        placeholder="Wpisz nazwę miasta (np. Berlin)"
-        value={value}
-        onChange={e => onChange(e.target.value)}
-        className="
+        >
+            <input
+                type="text"
+                placeholder="Wpisz nazwę miasta (np. Berlin)"
+                value={value}
+                onChange={e => onChange(e.target.value)}
+                className="
           w-full
           bg-transparent
           text-indigo-950 placeholder-indigo-950/60
@@ -33,11 +32,11 @@ const SearchBar = ({ value, onChange, onSubmit }) => {
           rounded-full
           focus:outline-none
         "
-      />
+            />
 
-      <button
-        type="submit"
-        className="
+            <button
+                type="submit"
+                className="
           absolute right-2 top-1/2 -translate-y-1/2
           px-5 py-2.5
           rounded-full
@@ -47,17 +46,17 @@ const SearchBar = ({ value, onChange, onSubmit }) => {
           transition-all duration-300
           shadow-md
         "
-      >
-        Szukaj
-      </button>
-    </form>
-  );
+            >
+                Szukaj
+            </button>
+        </form>
+    );
 };
 
 SearchBar.propTypes = {
-  value: PropTypes.string.isRequired,
-  onChange: PropTypes.func.isRequired,
-  onSubmit: PropTypes.func.isRequired,
+    value: PropTypes.string.isRequired,
+    onChange: PropTypes.func.isRequired,
+    onSubmit: PropTypes.func.isRequired,
 };
 
 export default SearchBar;

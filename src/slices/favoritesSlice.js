@@ -1,29 +1,27 @@
-import { createSlice } from '@reduxjs/toolkit';
-import { loadFromLocalStorage } from '../utils/localStorage';
+import {createSlice} from '@reduxjs/toolkit';
+import {loadFromLocalStorage} from '../utils/localStorage';
 
 const initialState = {
-  cities: loadFromLocalStorage('favorites') || [],
+    cities: loadFromLocalStorage('favorites') || [],
 };
 
 const favoritesSlice = createSlice({
-  name: 'favorites',
-  initialState,
-  reducers: {
-    toggleFavorite(state, action) {
-      const exists = state.cities.find(
-        city => city.id === action.payload.id
-      );
+    name: 'favorites',
+    initialState,
+    reducers: {
+        toggleFavorite(state, action) {
+            const exists = state.cities.some(c => c.id === action.payload.id);
 
-      if (exists) {
-        state.cities = state.cities.filter(
-          city => city.id !== action.payload.id
-        );
-      } else {
-        state.cities.unshift(action.payload);
-      }
+            if (exists) {
+                state.cities = state.cities.filter(
+                    c => c.id !== action.payload.id,
+                );
+            } else {
+                state.cities.unshift(action.payload);
+            }
+        },
     },
-  },
 });
 
-export const { toggleFavorite } = favoritesSlice.actions;
+export const {toggleFavorite} = favoritesSlice.actions;
 export default favoritesSlice.reducer;

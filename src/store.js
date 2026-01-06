@@ -3,7 +3,7 @@ import {weatherReducer} from './slices/weatherSlice';
 import settingsReducer from './slices/settingSlice';
 import unitReducer from './slices/unitSlice';
 import favoritesReducer from './slices/favoritesSlice';
-import { saveToLocalStorage } from './utils/localStorage';
+import {saveToLocalStorage} from './utils/localStorage';
 
 export const store = configureStore({
     reducer: {
@@ -15,8 +15,8 @@ export const store = configureStore({
 });
 
 store.subscribe(() => {
-  const state = store.getState();
+    const state = store.getState();
 
-  saveToLocalStorage('favorites', state.favorites.cities);
-  saveToLocalStorage('unit', state.unit.unit);
+    saveToLocalStorage('favorites', state.favorites.cities);
+    saveToLocalStorage('unit', state.unit.unit);
 });

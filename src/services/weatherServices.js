@@ -28,7 +28,7 @@ export const searchCityByName = cityName =>
         params: {
             q: cityName,
             appid: API_KEY,
-            units: 'metric', 
+            units: 'metric',
             lang: 'pl',
         },
     });
