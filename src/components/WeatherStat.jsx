@@ -19,7 +19,6 @@ const WeatherStats = ({ current, unit }) => {
 
   return (
     <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 mt-6 w-full">
-      {/* Wiatr */}
       <div className="flex-1 bg-white/5 backdrop-blur-md p-6 rounded-xl flex flex-col items-center text-white shadow-lg transition">
         <img src={windIcon} alt="Wiatr" className="w-8 h-8 p-1" />
         <span className="font-semibold">Wiatr</span>
@@ -28,7 +27,6 @@ const WeatherStats = ({ current, unit }) => {
         </span>
       </div>
 
-      {/* Zachmurzenie */}
       <div className="flex-1 bg-white/5 backdrop-blur-md p-6 rounded-xl flex flex-col items-center text-white shadow-lg transition">
         <img src={cloudIcon} alt="Zachmurzenie" className="w-10 h-10" />
         <span className="font-semibold">Zachmurzenie</span>

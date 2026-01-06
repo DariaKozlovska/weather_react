@@ -1,15 +1,16 @@
 import { createSlice } from '@reduxjs/toolkit';
+import { loadFromLocalStorage } from '../utils/localStorage';
 
 const initialState = {
-  unit: 'C', 
+  unit: loadFromLocalStorage('unit') || 'C',
 };
 
 const unitSlice = createSlice({
   name: 'unit',
   initialState,
   reducers: {
-    setUnit: (state, action) => {
-      state.unit = action.payload; 
+    setUnit(state, action) {
+      state.unit = action.payload;
     },
   },
 });

@@ -1,7 +1,6 @@
 import { useEffect, useMemo, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
-
 import { fetchWeather } from '../slices/weatherSlice';
 import ForecastCard from '../components/ForecastCard';
 import { getDailyForecast } from '../functions/getDailyForecast';
@@ -9,6 +8,9 @@ import { useTemperatureUnit, convertTemperature } from '../hooks/useTemperature'
 import { getWindDirection } from '../constants/windDirections';
 import WeatherStats from '../components/WeatherStat';
 import { setUnit } from '../slices/unitSlice'; 
+import { toggleFavorite } from '../slices/favoritesSlice';
+import starIcon from '../assets/icons/star.png';
+import unstarIcon from '../assets/icons/unstar.png';
 
 const Details = () => {
   const { state: city } = useLocation();
@@ -18,6 +20,9 @@ const Details = () => {
   const { current, forecast, loading, error } = useSelector(state => state.weather);
   const unit = useSelector(state => state.unit.unit);
   const [view, setView] = useState('current');
+
+  const favorites = useSelector(state => state.favorites.cities);
+  const isFavorite = favorites.some(fav => fav.id === city.id);
 
   useEffect(() => {
     if (city?.lat && city?.lon) {
@@ -77,7 +82,19 @@ const Details = () => {
           ))}
         </div>
 
-        <h1 className="text-4xl font-bold mb-2">{city.name}</h1>
+        <div className="flex items-center mb-1 gap-3">
+          <h1 className="text-4xl font-bold mb-2">{city.name}</h1>
+          <button
+            onClick={() => dispatch(toggleFavorite(city))}
+            className="transition hover:scale-110"
+          >
+            <img
+              src={isFavorite ? starIcon : unstarIcon}
+              alt="Ulubione"
+              className="w-6 h-6"
+            />
+          </button>
+        </div>
         <p className="text-white/60 mb-8">Aktualne informacje pogodowe</p>
 
         <div className="flex gap-2 mb-8">

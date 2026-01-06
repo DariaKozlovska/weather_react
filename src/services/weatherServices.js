@@ -27,7 +27,8 @@ export const searchCityByName = cityName =>
     axios.get(`${BASE_URL}/weather`, {
         params: {
             q: cityName,
-            units: 'metric',
             appid: API_KEY,
+            units: 'metric', 
+            lang: 'pl',
         },
     });

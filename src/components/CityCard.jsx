@@ -1,17 +1,27 @@
 import { useNavigate } from 'react-router-dom';
 import PropTypes from 'prop-types';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { convertTemperature } from '../hooks/useTemperature';
+import { toggleFavorite } from '../slices/favoritesSlice';
+import starIcon from '../assets/icons/star.png';
+import unstarIcon from '../assets/icons/unstar.png';
 
 const CityCard = ({ city }) => {
   const navigate = useNavigate();
-  const unit = useSelector(state => state.unit.unit); // globalna jednostka
+  const dispatch = useDispatch();
+  const unit = useSelector(state => state.unit.unit); 
+  const favorites = useSelector(state => state.favorites.cities);
+  const isFavorite = favorites.some(c => c.id === city.id);
 
   const handleClick = () => {
     navigate(`/details/${city.id}`, { state: city });
   };
 
-  // przelicz temperaturę na wybraną jednostkę
+  const handleFavorite = e => {
+    e.stopPropagation();
+    dispatch(toggleFavorite(city));
+  };
+
   const displayTemp = city.temp !== undefined ? convertTemperature(city.temp, unit).toFixed(1) : '--';
 
   return (
@@ -44,6 +54,14 @@ const CityCard = ({ city }) => {
         <span className="text-2xl font-bold text-white">
           {displayTemp}°{unit}
         </span>
+
+        <button
+          onClick={handleFavorite}
+          className="absolute top-2 right-2 text-xl"
+        >
+          {isFavorite ? 
+           <img src={starIcon} alt="Ulubione" className="w-4 h-4" /> : <img src={unstarIcon} alt="Nie ulubione" className="w-4 h-4" />}
+        </button>
       </div>
 
       <div className="mt-6 flex items-center justify-between text-white/70 text-sm">
